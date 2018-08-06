@@ -9,6 +9,63 @@ java_library(
 )
 
 java_library(
+    name = "UserExtractor",
+    srcs = ["UserExtractor.java"],
+    deps = [
+        "@jsr_305//jar",
+    ],
+)
+
+java_library(
+    name = "InetSocketHostExtractor",
+    srcs = ["InetSocketHostExtractor.java"],
+    deps = [
+        ":UserExtractor",
+        "@jsr_305//jar",
+    ],
+)
+
+java_library(
+    name = "UserBasedRateLimiter",
+    srcs = ["UserBasedRateLimiter.java"],
+    deps = [
+        ":RateLimiter",
+        ":RequestHandler",
+        ":ReadOnlyRequestRegistry",
+        ":UserExtractor",
+        "@jsr_305//jar",
+    ],
+)
+
+java_library(
+    name = "RequestRegistry",
+    srcs = ["RequestRegistry.java"],
+    deps = [
+        ":ReadOnlyRequestRegistry",
+        ":UserExtractor",
+        "@jsr_305//jar",
+    ],
+)
+
+java_library(
+    name = "ReadOnlyRequestRegistry",
+    srcs = ["ReadOnlyRequestRegistry.java"],
+    deps = [
+        "@jsr_305//jar",
+    ],
+)
+
+java_library(
+    name = "RegisteringRequestHandler",
+    srcs = ["RegisteringRequestHandler.java"],
+    deps = [
+        ":RequestHandler",
+        ":RequestRegistry",
+        "@jsr_305//jar",
+    ],
+)
+
+java_library(
     name = "NullRateLimiter",
     srcs = ["NullRateLimiter.java"],
     deps = [
