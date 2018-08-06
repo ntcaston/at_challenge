@@ -1,6 +1,11 @@
 java_library(
-  name = "DemoHttpHandler",
-  srcs = ["DemoHttpHandler.java"],
+    name = "DemoHttpHandler",
+    srcs = ["DemoHttpHandler.java"],
+    deps = [
+        "//src/java/com/caston/challenge/server:NullRateLimiter",
+        "//src/java/com/caston/challenge/server:RequestHandler",
+        "//src/java/com/caston/challenge/server:Server",
+    ],
 )
 
 # Main entry point for demo.
