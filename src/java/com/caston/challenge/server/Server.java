@@ -28,7 +28,7 @@ public final class Server<T> {
    * Handles the exchange by either denying it if the rate limiter dictates, or
    * by handling it with this classes RequestHandler object.
    *
-   * Performs logic synchronously; it is the callers responsibility to handle
+   * Performs logic synchronously; it is the caller's responsibility to handle
    * assigning exhanges to threads.
    *
    * This method is thread-safe.
