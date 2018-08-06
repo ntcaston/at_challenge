@@ -24,5 +24,6 @@ java_library(
     deps = [
         ":RateLimiter",
         ":RequestHandler",
+        "@guava//jar",
     ],
 )

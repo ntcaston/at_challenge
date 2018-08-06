@@ -2,6 +2,8 @@ package com.caston.challenge.server;
 
 import java.io.IOException;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Main server for handling incoming requests.
  */
@@ -15,10 +17,8 @@ public final class Server<T> {
    *     rate limited. Should not perform its own rate limiting.
    */
   public Server(RateLimiter<T> rateLimiter, RequestHandler<T> requestHandler) {
-    // TODO(ntcaston): Preconditions.checkNotNull, update readme to reflect that
-    // project assumes non-null unless explicitly marked @Nullable
-    this.rateLimiter = rateLimiter;
-    this.requestHandler = requestHandler;
+    this.rateLimiter = Preconditions.checkNotNull(rateLimiter);
+    this.requestHandler = Preconditions.checkNotNull(requestHandler);
   }
 
   /**
