@@ -19,6 +19,7 @@ import com.sun.net.httpserver.HttpServer;
  * Depends on Oracle JRE for HTTP library.
  */
 public class DemoHttpHandler implements HttpHandler {
+  // TODO(ntcaston): Use an actual rate limiter.
   private final Server<HttpExchange> server =
       new Server<HttpExchange>(new NullRateLimiter(), new Handler());
 
