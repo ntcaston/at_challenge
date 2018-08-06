@@ -31,6 +31,7 @@ public final class Server<T> {
    * This method is thread-safe.
    */
   // TODO(ntcaston): ThreadSafe annotation
+  // TODO(ntcaston): Clarify expectations around exception handling.
   public void handleRequest(T exchange) throws IOException {
     if (rateLimiter.rateLimitIfNecessary(exchange)) {
       return;
