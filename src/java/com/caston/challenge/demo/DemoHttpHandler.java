@@ -1,8 +1,8 @@
 package com.caston.challenge.demo;
 
 import com.caston.challenge.server.NullRateLimiter;
+import com.caston.challenge.server.RateLimitedRequestHandler;
 import com.caston.challenge.server.RequestHandler;
-import com.caston.challenge.server.Server;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,8 +20,9 @@ import com.sun.net.httpserver.HttpServer;
  */
 public class DemoHttpHandler implements HttpHandler {
   // TODO(ntcaston): Use an actual rate limiter.
-  private final Server<HttpExchange> server =
-      new Server<HttpExchange>(new NullRateLimiter(), new Handler());
+  private final RateLimitedRequestHandler<HttpExchange> handler =
+      new RateLimitedRequestHandler<HttpExchange>(new NullRateLimiter(),
+          new StaticHttpRequestHandler());
 
   /**
    * Creates an DemoHttpHandler instance on the specified path and port and
@@ -40,10 +41,11 @@ public class DemoHttpHandler implements HttpHandler {
 
   @Override
   public void handle(HttpExchange exchange) throws IOException {
-    server.handleRequest(exchange);
+    handler.handle(exchange);
   }
 
-  private class Handler implements RequestHandler<HttpExchange> {
+  private class StaticHttpRequestHandler
+      implements RequestHandler<HttpExchange> {
     /**
      * Content sent in body of HTTP requests.
      *

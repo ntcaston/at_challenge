@@ -25,8 +25,8 @@ java_library(
 )
 
 java_library(
-    name = "Server",
-    srcs = ["Server.java"],
+    name = "RateLimitedRequestHandler",
+    srcs = ["RateLimitedRequestHandler.java"],
     deps = [
         ":RateLimiter",
         ":RequestHandler",

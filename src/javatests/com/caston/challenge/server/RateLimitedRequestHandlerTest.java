@@ -12,15 +12,16 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-public class ServerTest {
+public class RateLimitedRequestHandlerTest {
   @Test
   public void testRateLimitedRequest() throws IOException {
     RateLimiter<String> mockLimiter = mock(RateLimiter.class);
     when(mockLimiter.rateLimitIfNecessary(anyString())).thenReturn(true);
     RequestHandler<String> mockHandler = mock(RequestHandler.class);
-    Server<String> server = new Server<>(mockLimiter, mockHandler);
+    RateLimitedRequestHandler<String> rateLimitedHandler =
+        new RateLimitedRequestHandler<>(mockLimiter, mockHandler);
 
-    server.handleRequest("Hello there!");
+    rateLimitedHandler.handle("Hello there!");
 
     verify(mockLimiter, times(1)).rateLimitIfNecessary("Hello there!");
     verify(mockHandler, never()).handle(anyString());
@@ -31,9 +32,10 @@ public class ServerTest {
     RateLimiter<String> mockLimiter = mock(RateLimiter.class);
     when(mockLimiter.rateLimitIfNecessary(anyString())).thenReturn(false);
     RequestHandler<String> mockHandler = mock(RequestHandler.class);
-    Server<String> server = new Server<>(mockLimiter, mockHandler);
+    RateLimitedRequestHandler<String> rateLimitedHandler =
+        new RateLimitedRequestHandler<>(mockLimiter, mockHandler);
 
-    server.handleRequest("Hello there!");
+    rateLimitedHandler.handle("Hello there!");
 
     verify(mockLimiter, times(1)).rateLimitIfNecessary("Hello there!");
     verify(mockHandler, times(1)).handle("Hello there!");

@@ -13,6 +13,9 @@ public interface RequestHandler<T> {
   /**
    * Handles and single request-response exchange.
    *
+   * Blocks until completion. It is the caller's responsibility to handle
+   * delegating calls to threads.
+   *
    * This method must be thread-safe.
    */
   void handle(T exchange) throws IOException;

@@ -3,8 +3,8 @@ java_library(
     srcs = ["DemoHttpHandler.java"],
     deps = [
         "//src/java/com/caston/challenge/server:NullRateLimiter",
+        "//src/java/com/caston/challenge/server:RateLimitedRequestHandler",
         "//src/java/com/caston/challenge/server:RequestHandler",
-        "//src/java/com/caston/challenge/server:Server",
     ],
 )
 
