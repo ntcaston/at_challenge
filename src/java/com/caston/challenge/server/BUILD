@@ -3,6 +3,9 @@ package(default_visibility = ["//visibility:public"])
 java_library(
     name = "RateLimiter",
     srcs = ["RateLimiter.java"],
+    deps = [
+        "@jsr_305//jar",
+    ],
 )
 
 java_library(
@@ -16,6 +19,9 @@ java_library(
 java_library(
     name = "RequestHandler",
     srcs = ["RequestHandler.java"],
+    deps = [
+        "@jsr_305//jar",
+    ],
 )
 
 java_library(
@@ -25,5 +31,6 @@ java_library(
         ":RateLimiter",
         ":RequestHandler",
         "@guava//jar",
+        "@jsr_305//jar",
     ],
 )

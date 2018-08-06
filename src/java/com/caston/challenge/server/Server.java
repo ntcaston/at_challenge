@@ -2,11 +2,14 @@ package com.caston.challenge.server;
 
 import java.io.IOException;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import com.google.common.base.Preconditions;
 
 /**
  * Main server for handling incoming requests.
  */
+@ThreadSafe
 public final class Server<T> {
   private final RateLimiter<T> rateLimiter;
   private final RequestHandler<T> requestHandler;
@@ -30,7 +33,6 @@ public final class Server<T> {
    *
    * This method is thread-safe.
    */
-  // TODO(ntcaston): ThreadSafe annotation
   public void handleRequest(T exchange) throws IOException {
     if (rateLimiter.rateLimitIfNecessary(exchange)) {
       return;

@@ -2,10 +2,13 @@ package com.caston.challenge.server;
 
 import java.io.IOException;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
  * Responsible for determining if a request should be permitted and updating the
  * reponse for rate limited exchanges.
  */
+@ThreadSafe
 public interface RateLimiter<T> {
   /**
    * Determines if an exchange should be rate limited. If the exchange is to be
@@ -18,6 +21,5 @@ public interface RateLimiter<T> {
    * @return true iff {@code exchange} is being rate limited and should not be
    *     handled.
    */
-  // TODO(ntcaston): ThreadSafe annotation
   boolean rateLimitIfNecessary(T exchange) throws IOException;
 }
