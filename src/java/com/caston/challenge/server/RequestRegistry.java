@@ -63,9 +63,14 @@ public class RequestRegistry<U, T> implements ReadOnlyRequestRegistry<U> {
   public void registerRequest(T exchange) {
     U user = userExtractor.extractUser(exchange);
     Instant now = clock.instant();
-    // TODO(ntcaston): Delete debug logging.
-    System.out.println("RequestRegistry received request from: " + user);
-    requests.putIfAbsent(user, new ConcurrentLinkedDeque<Instant>()).add(now);
+    ConcurrentLinkedDeque<Instant> tmpList =
+        new ConcurrentLinkedDeque<Instant>();
+    ConcurrentLinkedDeque<Instant> listToUpdate =
+        requests.putIfAbsent(user, tmpList);
+    if (listToUpdate == null) {
+      listToUpdate = tmpList;
+    }
+    listToUpdate.add(now);
     if (requestsSinceLastGarbageCollect.incrementAndGet() >
         REQUESTS_BETWEEN_GC) {
       requestsSinceLastGarbageCollect.addAndGet(-REQUESTS_BETWEEN_GC);
@@ -87,13 +92,12 @@ public class RequestRegistry<U, T> implements ReadOnlyRequestRegistry<U> {
     // ConcurrentModificationExcpetion during usage. The result may not be
     // be perfectly accurate if modified while iterating.
     for (Instant requestTime : requests.get(user)) {
-      if (requestTime.isAfter(requestWindowStart) &&
-          requestTime.isBefore(requestWindowEnd)) {
+      if (requestTime.equals(requestWindowStart) ||
+              (requestTime.isAfter(requestWindowStart) &&
+              requestTime.isBefore(requestWindowEnd))) {
         count++;
       }
     }
-    // TODO(ntcaston): Delete debug logging.
-    System.out.println("Request count for user, " + user + ": " + count);
     return count;
   }
 
@@ -107,7 +111,6 @@ public class RequestRegistry<U, T> implements ReadOnlyRequestRegistry<U> {
    */
   private void garbageCollectOldEntries() {
     Instant oldestAllowed = clock.instant().minus(ageLimit);
-    int entriesRemoved = 0;
 
     // ConcurrentHashMap is weakly consistent during iteration and will not
     // throw an exception due to concurrent modification.
@@ -119,15 +122,11 @@ public class RequestRegistry<U, T> implements ReadOnlyRequestRegistry<U> {
       while (listIt.hasNext()) {
         if (listIt.next().isBefore(oldestAllowed)) {
           listIt.remove();
-          entriesRemoved++;
         }
       }
       if (entry.getValue().isEmpty()) {
         mapIt.remove();
       }
     }
-
-    // TODO(ntcaston): Remove debug logging.
-    System.out.println("Removed " + entriesRemoved + " elements");
   }
 }

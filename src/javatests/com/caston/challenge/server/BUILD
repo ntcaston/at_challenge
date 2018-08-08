@@ -19,6 +19,17 @@ java_test(
 )
 
 java_test(
+    name = "RequestRegistryTest",
+    srcs = ["RequestRegistryTest.java"],
+    deps = [
+        ":FakeClock",
+        "//src/java/com/caston/challenge/server:RequestRegistry",
+        "//src/java/com/caston/challenge/server:UserExtractor",
+        "@mockito//jar",
+    ],
+)
+
+java_test(
     name = "UserBasedRateLimiterTest",
     srcs = ["UserBasedRateLimiterTest.java"],
     deps = [
