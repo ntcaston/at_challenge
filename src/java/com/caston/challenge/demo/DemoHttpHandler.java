@@ -29,8 +29,8 @@ import com.sun.net.httpserver.HttpServer;
  */
 public class DemoHttpHandler implements HttpHandler {
   // Rate limiter config.
-  private static final int REQUEST_COUNT_LIMIT = 10;
-  private static final Duration RATE_LIMIT_WINDOW = Duration.ofSeconds(30);
+  private static final int REQUEST_COUNT_LIMIT = 100;
+  private static final Duration RATE_LIMIT_WINDOW = Duration.ofHours(1);
 
   // Added buffer for keeping old requests in the request registry, in addition
   // to RATE_LIMIT_WINDOW.
