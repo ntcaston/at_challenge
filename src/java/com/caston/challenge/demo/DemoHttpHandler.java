@@ -12,6 +12,7 @@ import com.caston.challenge.server.UserExtractor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 import java.time.Clock;
 import java.time.Duration;
 
@@ -30,6 +31,7 @@ public class DemoHttpHandler implements HttpHandler {
   private static final Duration rateLimitWindow = Duration.ofSeconds(30);
   private static final Duration requestRegistryBuffer = Duration.ofSeconds(30);
   private static final int requestCountLimit = 10;
+  private static final int SERVER_THREAD_COUNT = 8;
 
   private final Clock clock = Clock.systemUTC();
   private final UserExtractor<String, HttpExchange> userExtractor =
@@ -59,7 +61,7 @@ public class DemoHttpHandler implements HttpHandler {
     HttpServer server = HttpServer.create(new InetSocketAddress(port),
         /* backlog, use default */0);
     server.createContext(path, new DemoHttpHandler());
-    // TODO(ntcaston): Set executor for HttpServer to use.
+    server.setExecutor(Executors.newFixedThreadPool(SERVER_THREAD_COUNT));
     server.start();
   }
 
