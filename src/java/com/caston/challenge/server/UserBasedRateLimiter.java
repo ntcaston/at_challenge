@@ -26,8 +26,8 @@ public class UserBasedRateLimiter<U, T> implements RateLimiter<T> {
    *     limiting purposes.
    * @param requestRegistry used for measuring how many requests have been made
    *     by a particular user. Is assumed to be compatible with
-   *     {@code userExtractor}. Requests should be registered before the rate
-   *     limiter is invoked.
+   *     {@code userExtractor}. Requests are assumed to be registered before the
+   *     rate limiter is invoked when determing if the request limit is reached.
    * @param rateLimitedRequestHandler handler invoked on exchanges which are
    *     rate limited. Should perform minimal processing.
    * @param clock used for measuring when requests occur. Must be consistent
