@@ -21,7 +21,8 @@ import com.sun.net.httpserver.HttpServer;
 
 /**
  * Basic HTTP handler for demoing the project which returns a very basic static
- * message to all requests.
+ * message to all non-ratelimited requests and status 429 for requests which
+ * are rate limited.
  *
  * Depends on Oracle JRE for HTTP library.
  */
