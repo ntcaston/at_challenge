@@ -28,17 +28,24 @@ import com.sun.net.httpserver.HttpServer;
  * Depends on Oracle JRE for HTTP library.
  */
 public class DemoHttpHandler implements HttpHandler {
-  private static final Duration rateLimitWindow = Duration.ofSeconds(30);
-  private static final Duration requestRegistryBuffer = Duration.ofSeconds(30);
-  private static final int requestCountLimit = 10;
+  // Rate limiter config.
+  private static final int REQUEST_COUNT_LIMIT = 10;
+  private static final Duration RATE_LIMIT_WINDOW = Duration.ofSeconds(30);
+
+  // Added buffer for keeping old requests in the request registry, in addition
+  // to RATE_LIMIT_WINDOW.
+  private static final Duration REQUEST_REGISTRY_BUFFER =
+      Duration.ofSeconds(30);
+
+  // Server config
   private static final int SERVER_THREAD_COUNT = 8;
 
   private final Clock clock = Clock.systemUTC();
   private final UserExtractor<String, HttpExchange> userExtractor =
       new InetSocketHostExtractor();
   private final RequestRegistry<String, HttpExchange> requestRegistry =
-      new RequestRegistry<>(clock, rateLimitWindow.plus(requestRegistryBuffer),
-          userExtractor);
+      new RequestRegistry<>(clock,
+          RATE_LIMIT_WINDOW.plus(REQUEST_REGISTRY_BUFFER), userExtractor);
   private final RequestHandler<HttpExchange> handler =
       new RegisteringRequestHandler<String, HttpExchange>(requestRegistry,
           new RateLimitedRequestHandler<HttpExchange>(
@@ -46,8 +53,8 @@ public class DemoHttpHandler implements HttpHandler {
                   requestRegistry,
                   new RateLimitedResponseWriter(),
                   clock,
-                  rateLimitWindow,
-                  requestCountLimit),
+                  RATE_LIMIT_WINDOW,
+                  REQUEST_COUNT_LIMIT),
           new StaticHttpRequestHandler()));
 
   /**
