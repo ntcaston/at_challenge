@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.time.Clock;
+import java.time.Duration;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -25,19 +26,25 @@ import com.sun.net.httpserver.HttpServer;
  * Depends on Oracle JRE for HTTP library.
  */
 public class DemoHttpHandler implements HttpHandler {
+  private static final Duration rateLimitWindow = Duration.ofSeconds(30);
+  private static final Duration requestRegistryBuffer = Duration.ofSeconds(30);
+  private static final int requestCountLimit = 10;
+
+  private final Clock clock = Clock.systemUTC();
   private final UserExtractor<String, HttpExchange> userExtractor =
       new InetSocketHostExtractor();
   private final RequestRegistry<String, HttpExchange> requestRegistry =
-      new RequestRegistry<>(userExtractor);
+      new RequestRegistry<>(clock, rateLimitWindow.plus(requestRegistryBuffer),
+          userExtractor);
   private final RequestHandler<HttpExchange> handler =
       new RegisteringRequestHandler<String, HttpExchange>(requestRegistry,
           new RateLimitedRequestHandler<HttpExchange>(
               new UserBasedRateLimiter(userExtractor,
                   requestRegistry,
                   new RateLimitedResponseWriter(),
-                  Clock.systemUTC(),
-                  30,
-                  10),
+                  clock,
+                  rateLimitWindow,
+                  requestCountLimit),
           new StaticHttpRequestHandler()));
 
   /**

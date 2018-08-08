@@ -34,6 +34,7 @@ java_library(
         ":ReadOnlyRequestRegistry",
         ":UserExtractor",
         "@jsr_305//jar",
+        "@guava//jar",
     ],
 )
 
@@ -44,6 +45,7 @@ java_library(
         ":ReadOnlyRequestRegistry",
         ":UserExtractor",
         "@jsr_305//jar",
+        "@guava//jar",
     ],
 )
 
@@ -61,6 +63,7 @@ java_library(
     deps = [
         ":RequestHandler",
         ":RequestRegistry",
+        "@guava//jar",
         "@jsr_305//jar",
     ],
 )
