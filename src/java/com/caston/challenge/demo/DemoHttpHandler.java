@@ -80,7 +80,7 @@ public class DemoHttpHandler implements HttpHandler {
   /**
    * Handler for non-rate limited requests.
    */
-  private class StaticHttpRequestHandler
+  private static class StaticHttpRequestHandler
       implements RequestHandler<HttpExchange> {
     /**
      * Content sent in body of HTTP requests.
@@ -103,9 +103,10 @@ public class DemoHttpHandler implements HttpHandler {
   /**
    * Handles output for exchanges which have been rate limited.
    */
-  private class RateLimitedResponseWriter
+  private static class RateLimitedResponseWriter
       implements RequestHandler<HttpExchange> {
     private static final int HTTP_STATUS_TOO_MANY_REQ = 429;
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
       exchange.sendResponseHeaders(HTTP_STATUS_TOO_MANY_REQ, 0);
