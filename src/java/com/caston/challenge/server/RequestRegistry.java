@@ -18,7 +18,7 @@ import com.google.common.base.Preconditions;
  * requests that are older than a specified age will be removed from the
  * registry.
  *
- * In order to avoid completely locking, this class will not give completely
+ * In order to avoid completely locking, this class may not give completely
  * accurate results if requests are registered for a user while reading,
  * however errors from the true value should be minimal except in the most
  * extreme cases.
@@ -45,7 +45,7 @@ public class RequestRegistry<U, T> implements ReadOnlyRequestRegistry<U> {
    *     assumed that the clock is non-decreasing in time - so localized
    *     timezones which can move backwards (e.g. day light savings) should not
    *     be used.
-   * @param ageLimit how old requests may be to make them available for
+   * @param ageLimit how old requests may be to make them available to be
    *     unregistered.
    */
   public RequestRegistry(Clock clock, Duration ageLimit,
@@ -85,7 +85,7 @@ public class RequestRegistry<U, T> implements ReadOnlyRequestRegistry<U> {
     int count = 0;
     // ConcurrentLinkedDeque iterators are weakly consistent and will not throw
     // ConcurrentModificationExcpetion during usage. The result may not be
-    // be perfectly accurate is modified while iterating.
+    // be perfectly accurate if modified while iterating.
     for (Instant requestTime : requests.get(user)) {
       if (requestTime.isAfter(requestWindowStart) &&
           requestTime.isBefore(requestWindowEnd)) {
