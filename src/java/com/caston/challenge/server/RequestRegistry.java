@@ -24,7 +24,7 @@ import com.google.common.base.Preconditions;
  * extreme cases.
  */
 @ThreadSafe
-public class RequestRegistry<U, T> implements ReadOnlyRequestRegistry<U> {
+public final class RequestRegistry<U, T> implements ReadOnlyRequestRegistry<U> {
   // The number of requests between garbage collection events. Ideally
   // collection would be done periodically on a background thread to reduce
   // impact on user query latency.
